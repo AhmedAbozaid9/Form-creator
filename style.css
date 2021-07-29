@@ -1,0 +1,141 @@
+* {
+  box-sizing: border-box;
+}
+
+*:focus {
+  outline: none;
+}
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #d0e1ff;
+}
+
+h1 {
+  border-bottom: solid 1px #000;
+  padding: 1rem;
+  width: 70%;
+  max-width: 1500px;
+  text-align: center;
+  margin: 2rem auto;
+}
+.choices {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  max-width: 1000px;
+  margin: 4rem auto;
+}
+.choiceContainer {
+  display: flex;
+  cursor: pointer;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #000;
+  width: 250px;
+  height: 250px;
+  padding: 1rem;
+  margin: 2rem;
+  border-radius: 5px;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+  background-color: #fff;
+}
+.choiceContainer p {
+  font-size: 20px;
+  font-weight: 700;
+}
+.backBtn {
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  position: absolute;
+  left: 50px;
+  top: 50px;
+  background-color: inherit;
+}
+.backBtn:hover {
+  border-bottom: 1px solid #000;
+}
+
+.addBtn {
+  margin: 1rem auto;
+  background-color: #fff;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  border: none;
+  display: block;
+  cursor: pointer;
+  color: #035397;
+}
+
+.card {
+  width: 70vw;
+  min-height: 250px;
+  background-color: #fff;
+  border-left: 8px solid #035397;
+  border-radius: 10px;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+  margin: 1rem auto;
+  padding: 0.5rem 0;
+}
+.card > .question {
+  width: 70%;
+  margin: 1.5rem;
+  margin-bottom: 0%;
+  font-size: 20px;
+  border: none;
+  border-bottom: 2px solid #035397;
+  background-color: rgb(250, 250, 250);
+  padding: 0.5rem;
+}
+.card > .question:hover, .answer input:hover {
+  background-color: rgb(245, 245, 245);
+}
+.answersContainer{
+    margin: 1.5rem;
+}
+
+
+.answer{
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+.answer > input{
+    font-size: 18px;
+    border: none;
+    border-bottom: 2px solid #035397;
+    padding: 0.5rem;
+}
+.markCircle{
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-color: transparent;
+    border-radius: 50%;
+    border: 2px solid #bdbaba;
+    margin-right: 5px;
+}
+.correctAnswer{
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+
+}
+.correctAnswer select{
+    font-size: inherit;
+    padding: 2px;
+}
+.correctAnswer p{
+    margin-right: 10px;
+}
+@media (max-width: 700px) {
+  .choices {
+    flex-direction: column;
+  }
+  .card .question{
+      width: 90%;
+  }
+}
+
