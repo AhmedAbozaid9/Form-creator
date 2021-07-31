@@ -36,9 +36,6 @@ function createBackBtn() {
     //remove the done button
     doneContainer.removeChild(document.querySelector('.doneBtn'))
   })
-  
-  
-
 }
 
 function createCard() {
@@ -88,6 +85,28 @@ function createCard() {
     cardsContainer.removeChild(card)
   })
 }
+
+//save data
+function saveData() {
+    //get the data
+  let quiz = {}
+  let cards = document.querySelectorAll('.card')
+  let counter = 0
+  cards.forEach((card) => {
+    let cardData = {}
+    cardData['question'] = card.querySelector('.question').value
+    //get the answers of this question as an array
+    cardData['answers'] = Array.prototype.slice
+      .call(card.querySelectorAll('.answer input'))
+      .map((el) => el.value)
+    cardData['correctAnswer'] = +card.querySelector('.correctAnswer .nums').value
+    quiz['Q' + ++counter] = cardData
+  })
+  //save the data
+  localStorage.setItem('quizData',JSON.stringify(quiz))
+  console.log(JSON.parse(localStorage.getItem('quizData')))
+
+}
 //event listeners
 //create quiz
 createQuizBtn.addEventListener('click', () => {
@@ -105,6 +124,8 @@ createQuizBtn.addEventListener('click', () => {
   doneBtn.classList.add('doneBtn')
   doneBtn.innerText = 'Done'
   doneContainer.appendChild(doneBtn)
+
+  doneBtn.addEventListener('click', saveData)
 })
 takeQuizBtn.addEventListener('click', () => {
   clearScreen('take')
