@@ -6,12 +6,15 @@ const header = document.querySelector('h1')
 
 const backContainer = document.querySelector('.backContainer')
 const doneContainer = document.querySelector('.doneContainer')
-const btnContainer = document.querySelector('.btnContainer')
+const addContainer = document.querySelector('.addContainer')
+const resContainer = document.querySelector('.resContainer')
 const cardsContainer = document.querySelector('.cardsContainer')
+//to know what the client chose
+let choice = ''
 //functions
 function clearScreen(text) {
   choices.style.display = 'none'
-  header.innerText = `${text} a quiz`
+  header.innerText = `${text} the quiz`
 }
 
 function createBackBtn() {
@@ -24,17 +27,24 @@ function createBackBtn() {
     choices.style.display = 'flex'
     //hide the back button
     backContainer.removeChild(backBtn)
-    //remove the button that creates cards
-    btnContainer.removeChild(document.querySelector('.addBtn'))
     //reset the header
     header.innerText = 'Choose whether to create a quiz or take one.'
-    //delete the cards
-    document
-      .querySelectorAll('.card')
-      .forEach((card) => cardsContainer.removeChild(card))
+    if (choice === 'create') {
+      //remove the button that creates cards
+      addContainer.removeChild(document.querySelector('.addBtn'))
+      //delete the cards
+      document
+        .querySelectorAll('.card')
+        .forEach((card) => cardsContainer.removeChild(card))
 
-    //remove the done button
-    doneContainer.removeChild(document.querySelector('.doneBtn'))
+      //remove the done button
+      doneContainer.removeChild(document.querySelector('.doneBtn'))
+    } else {
+      document
+        .querySelectorAll('.qCard')
+        .forEach((card) => cardsContainer.removeChild(card))
+        resContainer.removeChild(document.querySelector('.resBtn'))
+    }
   })
 }
 
@@ -45,19 +55,19 @@ function createCard() {
     <input type="text" class="question" placeholder="Question" />
     <section class="answers">
       <div class="answersContainer">
-        <div class="answer answer1">
+        <div class="answer">
           <div class="markCircle"></div>
           <input type="text" placeholder="type an answer here" />
         </div>
-        <div class="answer answer2">
+        <div class="answer">
           <div class="markCircle"></div>
           <input type="text" placeholder="type an answer here" />
         </div>
-        <div class="answer answer3">
+        <div class="answer">
           <div class="markCircle"></div>
           <input type="text" placeholder="type an answer here" />
         </div>
-        <div class="answer answer4">
+        <div class="answer">
           <div class="markCircle"></div>
           <input type="text" placeholder="type an answer here" />
         </div>
@@ -88,7 +98,7 @@ function createCard() {
 
 //save data
 function saveData() {
-    //get the data
+  //get the data
   let quiz = {}
   let cards = document.querySelectorAll('.card')
   let counter = 0
@@ -99,35 +109,100 @@ function saveData() {
     cardData['answers'] = Array.prototype.slice
       .call(card.querySelectorAll('.answer input'))
       .map((el) => el.value)
-    cardData['correctAnswer'] = +card.querySelector('.correctAnswer .nums').value
+    cardData['correctAnswer'] = +card.querySelector('.correctAnswer .nums')
+      .value
     quiz['Q' + ++counter] = cardData
   })
   //save the data
-  localStorage.setItem('quizData',JSON.stringify(quiz))
+  localStorage.setItem('quizData', JSON.stringify(quiz))
   console.log(JSON.parse(localStorage.getItem('quizData')))
-
 }
 //event listeners
 //create quiz
 createQuizBtn.addEventListener('click', () => {
-  clearScreen('Create')
+  clearScreen('Edit')
   createBackBtn()
-  createCard()
+  //determine the choice
+  choice = 'create'
+  //get the saved data
+  let data = JSON.parse(localStorage.getItem('quizData'))
+  for (let q in data) {
+    createCard()
+    let cards = document.querySelectorAll('.card')
+    let card = cards[cards.length - 1]
+    //get the question
+    card.querySelector('.question').value = data[q].question
+    //get the answers
+    for (let i = 0; i < 4; i++) {
+      card.querySelectorAll('.answer input')[i].value = data[q].answers[i]
+    }
+    //get the correct answer
+    card.querySelector('.correctAnswer .nums').value = data[q].correctAnswer
+  }
   //create the add card button
   const addBtn = document.createElement('button')
   addBtn.innerHTML = '<i class="fas fa-plus fa-2x"></i>'
   addBtn.classList.add('addBtn')
-  document.querySelector('.btnContainer').appendChild(addBtn)
+  document.querySelector('.addContainer').appendChild(addBtn)
   addBtn.addEventListener('click', createCard)
   //create the done button
   const doneBtn = document.createElement('button')
   doneBtn.classList.add('doneBtn')
-  doneBtn.innerText = 'Done'
+  doneBtn.innerText = 'Save'
   doneContainer.appendChild(doneBtn)
 
-  doneBtn.addEventListener('click', saveData)
+  doneBtn.addEventListener('click', () => {
+    saveData()
+    const saveText = document.createElement('p')
+    saveText.innerText = 'The quiz has been saved'
+    saveText.classList.add('saveText')
+    document.body.appendChild(saveText)
+    //added a set timeout to give the dom time to update
+    setTimeout(() => saveText.classList.add('show'), 0)
+    setTimeout(() => saveText.classList.remove('show'), 1300)
+    setTimeout(() => document.body.removeChild(saveText), 1700)
+  })
 })
+
+//take the quiz
 takeQuizBtn.addEventListener('click', () => {
   clearScreen('take')
   createBackBtn()
+  //determine the choice
+  choice = 'take'
+  const data = JSON.parse(localStorage.getItem('quizData'))
+  //create new cards for the questions
+  for (let q in data) {
+    if (data[q].question !== '') {
+      let qCard = document.createElement('div')
+      qCard.classList.add('qCard')
+      qCard.innerHTML = `
+      <p></p>
+      <ul>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+      </ul>`
+      qCard.querySelector('p').innerText = data[q].question
+      const listItems = qCard.querySelectorAll('li')
+      listItems.forEach((el, idx) => {
+        //add the inner text
+        el.innerHTML = '<i class="far fa-circle"></i> ' + data[q].answers[idx]
+        //add the ability to select
+        el.addEventListener('click', () => {
+            listItems.forEach(i => i.classList.remove('selected'))
+          el.classList.add('selected')
+        })
+      })
+      //add the questions
+      cardsContainer.appendChild(qCard)
+    }
+  }
+  //add the results button
+  const resBtn = document.createElement('button')
+  resBtn.classList.add('resBtn')
+  resBtn.innerText = 'Results'
+  resContainer.appendChild(resBtn)
+
 })
