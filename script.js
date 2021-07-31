@@ -5,6 +5,7 @@ const choices = document.querySelector('.choices')
 const header = document.querySelector('h1')
 
 const backContainer = document.querySelector('.backContainer')
+const doneContainer = document.querySelector('.doneContainer')
 const btnContainer = document.querySelector('.btnContainer')
 const cardsContainer = document.querySelector('.cardsContainer')
 //functions
@@ -18,7 +19,7 @@ function createBackBtn() {
   backBtn.innerText = '< Back'
   backBtn.classList.add('backBtn')
   backContainer.appendChild(backBtn)
-
+  //clear the screen
   backBtn.addEventListener('click', () => {
     choices.style.display = 'flex'
     //hide the back button
@@ -27,10 +28,20 @@ function createBackBtn() {
     btnContainer.removeChild(document.querySelector('.addBtn'))
     //reset the header
     header.innerText = 'Choose whether to create a quiz or take one.'
+    //delete the cards
+    document
+      .querySelectorAll('.card')
+      .forEach((card) => cardsContainer.removeChild(card))
+
+    //remove the done button
+    doneContainer.removeChild(document.querySelector('.doneBtn'))
   })
+  
+  
+
 }
 
-function createQuestion() {
+function createCard() {
   let card = document.createElement('div')
   card.classList.add('card')
   card.innerHTML = `
@@ -54,7 +65,7 @@ function createQuestion() {
           <input type="text" placeholder="type an answer here" />
         </div>
         <div class="correctAnswer">
-          <p>The right answer is</p>
+          <p>The correct answer is</p>
           <select class="nums">
             <option value="1">1</option>
             <option value="2">2</option>
@@ -64,20 +75,36 @@ function createQuestion() {
         </div>
       </div>
     </section>
+    <i class="fas fa-trash-alt fa-2x deleteBtn"></i>
   `
   cardsContainer.appendChild(card)
+  //the delete card button
+  //I'll get the latest button that I've added and add the event listener to it
+  const deleteBtns = document.querySelectorAll('.deleteBtn')
+  const lastBtn = deleteBtns[deleteBtns.length - 1]
+
+  lastBtn.addEventListener('click', () => {
+    const card = lastBtn.parentElement
+    cardsContainer.removeChild(card)
+  })
 }
 //event listeners
-
+//create quiz
 createQuizBtn.addEventListener('click', () => {
   clearScreen('Create')
   createBackBtn()
-  createQuestion()
-
-  let addBtn = document.createElement('button')
+  createCard()
+  //create the add card button
+  const addBtn = document.createElement('button')
   addBtn.innerHTML = '<i class="fas fa-plus fa-2x"></i>'
   addBtn.classList.add('addBtn')
   document.querySelector('.btnContainer').appendChild(addBtn)
+  addBtn.addEventListener('click', createCard)
+  //create the done button
+  const doneBtn = document.createElement('button')
+  doneBtn.classList.add('doneBtn')
+  doneBtn.innerText = 'Done'
+  doneContainer.appendChild(doneBtn)
 })
 takeQuizBtn.addEventListener('click', () => {
   clearScreen('take')

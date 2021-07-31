@@ -7,11 +7,12 @@
 }
 body {
   font-family: Arial, Helvetica, sans-serif;
-  background-color: #d0e1ff;
+  background-color: #eeeeee;
+  color: #334257;
 }
 
 h1 {
-  border-bottom: solid 1px #000;
+  border-bottom: solid 1px #334257;
   padding: 1rem;
   width: 70%;
   max-width: 1500px;
@@ -44,29 +45,42 @@ h1 {
   font-size: 20px;
   font-weight: 700;
 }
-.backBtn {
+.backBtn,
+.doneBtn {
   border: none;
+  padding: 10px 15px;
+  color: #fff;
   font-size: 20px;
   cursor: pointer;
   position: absolute;
-  left: 50px;
-  top: 50px;
-  background-color: inherit;
+  background-color: #035397;
+  border-radius: 5px;
 }
-.backBtn:hover {
-  border-bottom: 1px solid #000;
+
+.backBtn {
+  left: 40px;
+  top: 40px;
+}
+.doneBtn {
+  right: 40px;
+  top: 40px;
+}
+.backBtn:hover,
+.doneBtn:hover {
+  background-color: #096cc2;
 }
 
 .addBtn {
-  margin: 1rem auto;
   background-color: #fff;
   border-radius: 50%;
   width: 50px;
   height: 50px;
   border: none;
-  display: block;
   cursor: pointer;
   color: #035397;
+  position: fixed;
+  top: 50%;
+  right: 50px;
 }
 
 .card {
@@ -78,6 +92,7 @@ h1 {
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
   margin: 1rem auto;
   padding: 0.5rem 0;
+  position: relative;
 }
 .card > .question {
   width: 70%;
@@ -89,53 +104,69 @@ h1 {
   background-color: rgb(250, 250, 250);
   padding: 0.5rem;
 }
-.card > .question:hover, .answer input:hover {
+.card > .question:hover,
+.answer input:hover {
   background-color: rgb(245, 245, 245);
 }
-.answersContainer{
-    margin: 1.5rem;
+.answersContainer {
+  margin: 1.5rem;
 }
 
+.answer {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+.answer > input {
+  font-size: 18px;
+  border: none;
+  border-bottom: 2px solid #035397;
+  padding: 0.5rem;
+}
+.markCircle {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background-color: transparent;
+  border-radius: 50%;
+  border: 2px solid #bdbaba;
+  margin-right: 5px;
+}
+.correctAnswer {
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+}
+.correctAnswer select {
+  font-size: inherit;
+  padding: 2px;
+}
+.correctAnswer p {
+  margin-right: 10px;
+}
 
-.answer{
-    display: flex;
-    align-items: center;
-    margin-bottom: 0.5rem;
+.card .deleteBtn {
+  color: #035397;
+  cursor: pointer;
+  position: absolute;
+  right: 30px;
+  bottom: 30px;
 }
-.answer > input{
-    font-size: 18px;
-    border: none;
-    border-bottom: 2px solid #035397;
-    padding: 0.5rem;
-}
-.markCircle{
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    background-color: transparent;
-    border-radius: 50%;
-    border: 2px solid #bdbaba;
-    margin-right: 5px;
-}
-.correctAnswer{
-    display: flex;
-    align-items: center;
-    font-size: 20px;
 
-}
-.correctAnswer select{
-    font-size: inherit;
-    padding: 2px;
-}
-.correctAnswer p{
-    margin-right: 10px;
-}
 @media (max-width: 700px) {
   .choices {
     flex-direction: column;
   }
-  .card .question{
-      width: 90%;
+  .card .question {
+    width: 90%;
+  }
+  .addBtn {
+    right: 10px;
+    transform: scale(0.8);
+  }
+  .deleteBtn {
+    transform: scale(0.8);
+    right: 10px;
+    bottom: 10px;
   }
 }
-
