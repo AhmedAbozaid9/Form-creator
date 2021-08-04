@@ -8,7 +8,7 @@ const backContainer = document.querySelector('.backContainer')
 const doneContainer = document.querySelector('.doneContainer')
 const addContainer = document.querySelector('.addContainer')
 const resContainer = document.querySelector('.resContainer')
-const cardsContainer = document.querySelector('.cardsContainer')
+let cardsContainer = document.querySelector('.cardsContainer') //this is a variable because of how the app works
 //to know what the client chose
 let choice = ''
 //functions
@@ -40,10 +40,8 @@ function createBackBtn() {
       //remove the done button
       doneContainer.removeChild(document.querySelector('.doneBtn'))
     } else {
-      document
-        .querySelectorAll('.qCard')
-        .forEach((card) => cardsContainer.removeChild(card))
-        resContainer.removeChild(document.querySelector('.resBtn'))
+      cardsContainer = document.querySelector('.cardsContainer')
+      cardsContainer.innerHTML = ''
     }
   })
 }
@@ -109,13 +107,12 @@ function saveData() {
     cardData['answers'] = Array.prototype.slice
       .call(card.querySelectorAll('.answer input'))
       .map((el) => el.value)
-    cardData['correctAnswer'] = +card.querySelector('.correctAnswer .nums')
-      .value
+    cardData['correctAnswer'] =
+      +card.querySelector('.correctAnswer .nums').value - 1
     quiz['Q' + ++counter] = cardData
   })
   //save the data
   localStorage.setItem('quizData', JSON.stringify(quiz))
-  console.log(JSON.parse(localStorage.getItem('quizData')))
 }
 //event listeners
 //create quiz
@@ -166,7 +163,7 @@ createQuizBtn.addEventListener('click', () => {
 
 //take the quiz
 takeQuizBtn.addEventListener('click', () => {
-  clearScreen('take')
+  clearScreen('Take')
   createBackBtn()
   //determine the choice
   choice = 'take'
@@ -191,7 +188,7 @@ takeQuizBtn.addEventListener('click', () => {
         el.innerHTML = '<i class="far fa-circle"></i> ' + data[q].answers[idx]
         //add the ability to select
         el.addEventListener('click', () => {
-            listItems.forEach(i => i.classList.remove('selected'))
+          listItems.forEach((i) => i.classList.remove('selected'))
           el.classList.add('selected')
         })
       })
@@ -205,4 +202,36 @@ takeQuizBtn.addEventListener('click', () => {
   resBtn.innerText = 'Results'
   resContainer.appendChild(resBtn)
 
+  resBtn.addEventListener('click', () => {
+    let data = JSON.parse(localStorage.getItem('quizData'))
+    let qCards = document.querySelectorAll('.qCard')
+    let qCount = Object.keys(data).length // the number of total questionsa
+    let score = 0
+    //get the correct answers
+    let correctAnswers = []
+    for (let q in data) correctAnswers.push(data[q].correctAnswer)
+    //mark the answers
+    qCards.forEach((qCard, qIdx) => {
+      //get the chosen answer
+      let answers = qCard.querySelectorAll('li')
+      //compare the answers
+      answers.forEach((answer, idx) => {
+        if (answer.classList.contains('selected')) {
+          if (idx === correctAnswers[qIdx]) {
+            answer.classList.add('correct')
+            score++
+          } else {
+            answer.classList.add('wrong')
+            //find the right answer and highlight it
+            answers[correctAnswers[qIdx]].classList.add('correct')
+          }
+        }
+      })
+    })
+
+    //show the result
+    header.innerText = `Your score is ${score} / ${qCount}`
+    //create a clone for the card container to remove all the event listeners
+    cardsContainer.replaceWith(cardsContainer.cloneNode(true))
+  })
 })
