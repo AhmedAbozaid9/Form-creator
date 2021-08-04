@@ -31,17 +31,18 @@ function createBackBtn() {
     header.innerText = 'Choose whether to create a quiz or take one.'
     if (choice === 'create') {
       //remove the button that creates cards
-      addContainer.removeChild(document.querySelector('.addBtn'))
+      addContainer.innerHTML = ''
       //delete the cards
-      document
-        .querySelectorAll('.card')
-        .forEach((card) => cardsContainer.removeChild(card))
+      cardsContainer.innerHTML = ''
 
       //remove the done button
-      doneContainer.removeChild(document.querySelector('.doneBtn'))
+      doneContainer.innerHTML = ''
     } else {
+      //remove the cards
       cardsContainer = document.querySelector('.cardsContainer')
       cardsContainer.innerHTML = ''
+      //remove the button
+      resContainer.innerHTML = ''
     }
   })
 }
