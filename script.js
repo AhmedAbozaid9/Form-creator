@@ -109,7 +109,7 @@ function saveData() {
       .call(card.querySelectorAll('.answer input'))
       .map((el) => el.value)
     cardData['correctAnswer'] =
-      +card.querySelector('.correctAnswer .nums').value - 1
+      +card.querySelector('.correctAnswer .nums').value 
     quiz['Q' + ++counter] = cardData
   })
   //save the data
@@ -210,7 +210,7 @@ takeQuizBtn.addEventListener('click', () => {
     let score = 0
     //get the correct answers
     let correctAnswers = []
-    for (let q in data) correctAnswers.push(data[q].correctAnswer)
+    for (let q in data) correctAnswers.push(data[q].correctAnswer - 1)
     //mark the answers
     qCards.forEach((qCard, qIdx) => {
       //get the chosen answer
